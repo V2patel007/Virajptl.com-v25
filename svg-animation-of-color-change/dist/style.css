@@ -1,0 +1,21 @@
+.letter {
+  fill: #67daff;
+  animation: filter-animation 2s infinite;  
+}
+
+@keyframes filter-animation {
+  0% {fill: #67daff; }
+  33% { fill: #f92672; }
+  66% { fill: #a6e22e; }
+  100% { fill: #67daff;  }
+}
+
+/* centers vertically and horizontally*/
+svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%); /* IE 9 */
+    -webkit-transform: translate(-50%, -50%); /* Chrome, Safari, Opera */	    
+}

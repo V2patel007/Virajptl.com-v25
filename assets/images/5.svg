@@ -1,0 +1,27 @@
+<svg width="1079px" height="1058px" xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <path d="M777.518 197.484C1055.72 154.659 1035.11 609.409 755.555 588.462V771.238C755.555 773.503 755.293 775.774 754.689 777.958C735.513 847.224 659.074 887.44 574.502 849.221C571.576 847.899 568.927 845.984 566.674 843.697L128.227 398.583C127.128 397.467 126.096 396.232 125.221 394.933C49.3995 282.358 192.632 132.466 304.876 220.567L596.966 511.482C648.437 567.337 683.544 583.127 755.555 588.462V223.954C755.555 210.957 764.672 199.461 777.518 197.484Z" fill="url(#logo-gradient)">
+        </path>
+<!--         
+        <defs>  
+            <linearGradient id="logo-gradient" x1="50%" y1="0%" x2="50%" y2="100%"> 
+                <stop offset="0%" stop-color="#7A5FFF">
+                    <animate attributeName="stop-color" values="#7A5FFF; #01FF89; #7A5FFF" dur="4s" repeatCount="indefinite"></animate>
+                </stop>
+                <stop offset="100%" stop-color="#01FF89">
+                    <animate attributeName="stop-color" values="#01FF89; #7A5FFF; #01FF89" dur="4s" repeatCount="indefinite"></animate>
+                </stop>
+            </linearGradient> 
+        </defs> -->
+        <defs>  
+            <linearGradient id="logo-gradient" x1="50%" y1="0%" x2="50%" y2="100%"> 
+                <stop offset="0%" stop-color="#ee7752">
+                    <animate attributeName="stop-color" values="#ee7752; #e73c7e; #23a6d5; #23d5ab; #ee7752" dur="8s" repeatCount="indefinite"></animate>
+                </stop>
+                <stop offset="100%" stop-color="#23d5ab">
+                    <animate attributeName="stop-color" values="#23d5ab; #ee7752; #e73c7e; #23a6d5; #23d5ab" dur="8s" repeatCount="indefinite"></animate>
+                </stop>
+            </linearGradient> 
+        </defs>
+    </g>
+</svg>
