@@ -1,0 +1,1353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BASKLY Financial Plan Validation & Reality Check</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #0f1117;
+        --surface: #1a1d27;
+        --surface2: #242837;
+        --border: #2e3347;
+        --text: #e4e6f0;
+        --text2: #9ba1b7;
+        --accent: #6c5ce7;
+        --accent2: #a29bfe;
+        --green: #00b894;
+        --yellow: #fdcb6e;
+        --red: #e17055;
+        --orange: #f0932b;
+        --blue: #74b9ff;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        padding: 0;
+      }
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 40px 30px;
+      }
+      h1 {
+        font-size: 2.4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--accent2), var(--blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 8px;
+        letter-spacing: -1px;
+      }
+      h2 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--accent2);
+        margin: 48px 0 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--border);
+      }
+      h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--blue);
+        margin: 28px 0 14px;
+      }
+      h4 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--yellow);
+        margin: 22px 0 10px;
+      }
+      p {
+        margin: 10px 0;
+        color: var(--text2);
+        font-size: 0.95rem;
+      }
+      strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .subtitle {
+        font-size: 1.1rem;
+        color: var(--text2);
+        margin-bottom: 30px;
+      }
+      .hero {
+        text-align: center;
+        padding: 60px 30px 40px;
+        background: linear-gradient(
+          180deg,
+          rgba(108, 92, 231, 0.12),
+          transparent
+        );
+        border-radius: 20px;
+        margin-bottom: 40px;
+      }
+      .summary-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 28px;
+        margin: 20px 0;
+      }
+      .summary-box p {
+        margin: 6px 0;
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-right: 4px;
+      }
+      .badge-ok {
+        background: rgba(0, 184, 148, 0.15);
+        color: var(--green);
+      }
+      .badge-warn {
+        background: rgba(253, 203, 110, 0.15);
+        color: var(--yellow);
+      }
+      .badge-bad {
+        background: rgba(225, 112, 85, 0.15);
+        color: var(--red);
+      }
+      .badge-money {
+        background: rgba(116, 185, 255, 0.15);
+        color: var(--blue);
+      }
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 16px 0;
+        font-size: 0.88rem;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      thead {
+        background: var(--surface2);
+      }
+      th {
+        padding: 12px 14px;
+        text-align: left;
+        font-weight: 700;
+        color: var(--accent2);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      td {
+        padding: 10px 14px;
+        border-top: 1px solid var(--border);
+        color: var(--text2);
+      }
+      tbody tr:hover {
+        background: rgba(108, 92, 231, 0.06);
+      }
+      .highlight {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .green {
+        color: var(--green);
+      }
+      .yellow {
+        color: var(--yellow);
+      }
+      .red {
+        color: var(--red);
+      }
+      .blue {
+        color: var(--blue);
+      }
+      ul,
+      ol {
+        padding-left: 24px;
+        margin: 10px 0;
+      }
+      li {
+        margin: 6px 0;
+        color: var(--text2);
+        font-size: 0.93rem;
+      }
+      li strong {
+        color: var(--text);
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 24px;
+        margin: 16px 0;
+      }
+      .card-title {
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--accent2);
+        margin-bottom: 10px;
+      }
+      .verdict-box {
+        background: linear-gradient(
+          135deg,
+          rgba(108, 92, 231, 0.1),
+          rgba(116, 185, 255, 0.1)
+        );
+        border: 1px solid var(--accent);
+        border-radius: 14px;
+        padding: 28px;
+        margin: 20px 0;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 700px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+        h1 {
+          font-size: 1.8rem;
+        }
+        h2 {
+          font-size: 1.3rem;
+        }
+        .container {
+          padding: 20px 16px;
+        }
+      }
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 30px 0;
+      }
+      .phase {
+        border-left: 3px solid var(--accent);
+        padding-left: 18px;
+        margin: 18px 0;
+      }
+      .phase-title {
+        font-weight: 700;
+        color: var(--accent2);
+        font-size: 1rem;
+        margin-bottom: 6px;
+      }
+      .action-step {
+        background: var(--surface);
+        border-radius: 10px;
+        padding: 18px;
+        margin: 12px 0;
+        border-left: 3px solid var(--green);
+      }
+      .action-step h4 {
+        margin-top: 0;
+        color: var(--green);
+      }
+      .prob-bar {
+        height: 8px;
+        border-radius: 4px;
+        margin: 4px 0 8px;
+      }
+      .print-btn {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
+        z-index: 99;
+        box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
+      }
+      .print-btn:hover {
+        background: var(--accent2);
+        transform: translateY(-1px);
+      }
+      @media print {
+        .print-btn {
+          display: none;
+        }
+        body {
+          background: #fff;
+          color: #222;
+        }
+        h1,
+        h2,
+        h3 {
+          color: #333;
+        }
+        .summary-box,
+        .card,
+        .action-step {
+          border: 1px solid #ddd;
+          background: #f9f9f9;
+        }
+        table {
+          border: 1px solid #ccc;
+        }
+        th {
+          background: #eee;
+          color: #333;
+        }
+        td {
+          color: #444;
+          border-color: #ddd;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="print-btn" onclick="window.print()">
+      🖨️ Print / Save PDF
+    </button>
+    <div class="container">
+      <div class="hero">
+        <h1>BASKLY Financial Plan Validation</h1>
+        <p class="subtitle">
+          1,500 sq ft Premium Grocery Store — Alkapuri, Vadodara
+        </p>
+      </div>
+
+      <!-- EXECUTIVE SUMMARY -->
+      <h2>📋 Executive Summary: The Brutal Truth</h2>
+      <div class="summary-box">
+        <p>
+          <strong>Your Model's Core Assumption:</strong> 20-40 customers/day at
+          ₹1,000-₹2,000 bills
+        </p>
+        <p>
+          <strong>Reality Check:</strong> This is
+          <span class="red">HIGHLY OPTIMISTIC</span> for a new premium grocery
+          store in Vadodara
+        </p>
+        <p>
+          <strong>Break-Even Requirement:</strong> ₹6.67 lakh/month (22
+          customers/day @ ₹1,000)
+        </p>
+        <p>
+          <strong>Assessment:</strong> You'll likely need
+          <span class="yellow">6-12 months</span> to reach this consistently
+        </p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <span class="badge badge-ok">✅</span> Your cost structure is
+          <strong>REALISTIC</strong>
+        </div>
+        <div class="card">
+          <span class="badge badge-warn">⚠️</span> Your revenue projections are
+          <strong>AGGRESSIVE</strong>
+        </div>
+        <div class="card">
+          <span class="badge badge-bad">❌</span> Your timeline to profitability
+          is <strong>OPTIMISTIC</strong>
+        </div>
+        <div class="card">
+          <span class="badge badge-money">💰</span> You need
+          <strong>₹50-60 lakh</strong> total capital (12-18 months runway)
+        </div>
+      </div>
+
+      <!-- PART 1 -->
+      <h2>Part 1: Expense Validation</h2>
+      <h3>1.1 Fixed Monthly Costs: ₹2,50,000</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Expense Category</th>
+            <th>Your Number</th>
+            <th>Validation</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Rent</td>
+            <td>₹1,50,000</td>
+            <td class="green">✅ REALISTIC</td>
+            <td>₹100/sq ft in Alkapuri is market rate. Could be ₹1.2-1.8L</td>
+          </tr>
+          <tr>
+            <td class="highlight">Staff Salary (2 staff)</td>
+            <td>₹30,000</td>
+            <td class="red">❌ SEVERELY UNDERESTIMATED</td>
+            <td>See staff breakdown below</td>
+          </tr>
+          <tr>
+            <td class="highlight">Electricity</td>
+            <td>₹15,000</td>
+            <td class="yellow">⚠️ LOW</td>
+            <td>AC + refrigeration + lighting = ₹20-25K realistic</td>
+          </tr>
+          <tr>
+            <td class="highlight">Packaging</td>
+            <td>₹25,000</td>
+            <td class="green">✅ REASONABLE</td>
+            <td>~2% of sales for premium bags/boxes</td>
+          </tr>
+          <tr>
+            <td class="highlight">Miscellaneous</td>
+            <td>₹30,000</td>
+            <td class="red">❌ INCOMPLETE</td>
+            <td>Missing many critical expenses</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>1.2 Critical Staff Cost Reality Check</h3>
+      <p>
+        <strong>Your Assumption:</strong> 2 staff @ ₹30,000 total = ₹15,000 per
+        staff
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th># Staff</th>
+            <th>Monthly Salary</th>
+            <th>Monthly Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Store Manager</td>
+            <td>1</td>
+            <td>₹25,000-30,000</td>
+            <td>₹27,500</td>
+          </tr>
+          <tr>
+            <td class="highlight">Sales Associates</td>
+            <td>2-3</td>
+            <td>₹15,000-18,000 each</td>
+            <td>₹48,000 (for 3)</td>
+          </tr>
+          <tr>
+            <td class="highlight">Cashier</td>
+            <td>1</td>
+            <td>₹12,000-15,000</td>
+            <td>₹13,500</td>
+          </tr>
+          <tr>
+            <td class="highlight">Helper/Stockkeeper</td>
+            <td>1</td>
+            <td>₹10,000-12,000</td>
+            <td>₹11,000</td>
+          </tr>
+          <tr>
+            <td class="highlight" style="color: var(--accent2)">TOTAL</td>
+            <td>5-6</td>
+            <td></td>
+            <td class="highlight" style="color: var(--accent2)">
+              ₹1,00,000-1,20,000
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="card">
+        <p class="card-title">Additional Staff Costs You're Missing</p>
+        <ul>
+          <li>PF/ESI contributions: +12% = ₹12,000</li>
+          <li>Staff meals/uniforms: ₹5,000</li>
+          <li>
+            <strong class="yellow"
+              >REALISTIC TOTAL: ₹1,15,000-1,35,000/month</strong
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="card">
+        <p class="card-title">Compromise Option (Minimum Viable)</p>
+        <ul>
+          <li>
+            1 Manager: ₹25,000 | 2 Sales Associates: ₹32,000 | 1 Helper: ₹11,000
+          </li>
+          <li><strong class="green">Total: ₹68,000 + 12% = ₹76,000</strong></li>
+        </ul>
+      </div>
+
+      <h3>1.3 Missing Expenses in Your Model</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Missing Expense</th>
+            <th>Monthly Cost</th>
+            <th>Why It's Critical</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Marketing & Customer Acquisition</td>
+            <td>₹30,000-50,000</td>
+            <td>Instagram ads, influencer partnerships, launch events</td>
+          </tr>
+          <tr>
+            <td class="highlight">Delivery & Logistics</td>
+            <td>₹15,000-25,000</td>
+            <td>Delivery vehicle fuel, driver, packaging</td>
+          </tr>
+          <tr>
+            <td class="highlight">Insurance</td>
+            <td>₹5,000-8,000</td>
+            <td>Product liability, property, fire insurance</td>
+          </tr>
+          <tr>
+            <td class="highlight">Software/Technology</td>
+            <td>₹8,000-12,000</td>
+            <td>POS, inventory, CRM, accounting software</td>
+          </tr>
+          <tr>
+            <td class="highlight">Maintenance & Repairs</td>
+            <td>₹10,000</td>
+            <td>AC servicing, refrigeration, store upkeep</td>
+          </tr>
+          <tr>
+            <td class="highlight">Licenses & Compliance</td>
+            <td>₹5,000</td>
+            <td>FSSAI, trade license, organic certifications</td>
+          </tr>
+          <tr>
+            <td class="highlight">Accounting & Legal</td>
+            <td>₹5,000</td>
+            <td>CA fees, legal compliance</td>
+          </tr>
+          <tr>
+            <td class="highlight">Wastage & Spoilage</td>
+            <td>₹15,000-25,000</td>
+            <td>Fresh produce — budget 5-8% of fresh inventory</td>
+          </tr>
+          <tr>
+            <td class="highlight">Bank & Payment Gateway</td>
+            <td>₹8,000</td>
+            <td>Card processing fees (1.5-2%), UPI charges</td>
+          </tr>
+          <tr>
+            <td class="highlight">Security</td>
+            <td>₹10,000</td>
+            <td>CCTV, security guard part-time</td>
+          </tr>
+          <tr>
+            <td class="highlight" style="color: var(--red)">TOTAL MISSING</td>
+            <td class="highlight red">₹1,11,000-1,73,000</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>1.4 Revised Realistic Fixed Costs</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Cost Category</th>
+            <th>Conservative</th>
+            <th>Realistic</th>
+            <th>Aggressive</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Rent</td>
+            <td>₹1,50,000</td>
+            <td>₹1,50,000</td>
+            <td>₹1,50,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Staff (Minimum)</td>
+            <td>₹76,000</td>
+            <td>₹1,00,000</td>
+            <td>₹1,20,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Electricity</td>
+            <td>₹20,000</td>
+            <td>₹25,000</td>
+            <td>₹30,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Packaging</td>
+            <td>₹20,000</td>
+            <td>₹25,000</td>
+            <td>₹30,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Marketing</td>
+            <td>₹30,000</td>
+            <td>₹50,000</td>
+            <td>₹80,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Delivery & Logistics</td>
+            <td>₹15,000</td>
+            <td>₹20,000</td>
+            <td>₹25,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Technology</td>
+            <td>₹8,000</td>
+            <td>₹12,000</td>
+            <td>₹15,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Insurance</td>
+            <td>₹5,000</td>
+            <td>₹7,000</td>
+            <td>₹10,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Maintenance</td>
+            <td>₹8,000</td>
+            <td>₹10,000</td>
+            <td>₹15,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Wastage/Spoilage</td>
+            <td>₹15,000</td>
+            <td>₹20,000</td>
+            <td>₹30,000</td>
+          </tr>
+          <tr>
+            <td class="highlight">Other (licenses, banking, misc)</td>
+            <td>₹15,000</td>
+            <td>₹25,000</td>
+            <td>₹35,000</td>
+          </tr>
+          <tr style="background: var(--surface2)">
+            <td class="highlight" style="color: var(--accent2)">
+              TOTAL MONTHLY FIXED
+            </td>
+            <td class="highlight blue">₹3,62,000</td>
+            <td class="highlight" style="color: var(--accent2)">₹4,44,000</td>
+            <td class="highlight red">₹5,40,000</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="verdict-box">
+        <p>
+          <strong>YOUR MODEL:</strong> ₹2,50,000 &nbsp;→&nbsp;
+          <strong>REALISTIC MODEL:</strong> <span class="red">₹4,44,000</span>
+          <span class="yellow">(77% higher!)</span>
+        </p>
+      </div>
+
+      <!-- PART 2 -->
+      <h2>Part 2: Revenue Validation</h2>
+      <h3>2.1 Customer Traffic Assumptions</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Customers/Day</th>
+            <th>Realistic?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>10 customers/day</td>
+            <td>300/month</td>
+            <td class="red">❌ Too pessimistic for failure</td>
+          </tr>
+          <tr>
+            <td>20 customers/day</td>
+            <td>600/month</td>
+            <td class="yellow">⚠️ Optimistic for Month 1-3</td>
+          </tr>
+          <tr>
+            <td>40 customers/day</td>
+            <td>1,200/month</td>
+            <td class="red">❌ Unrealistic for Year 1</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2.2 Realistic Customer Ramp-Up</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Daily Customers</th>
+            <th>Monthly Customers</th>
+            <th>Avg Bill</th>
+            <th>Monthly Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Month 1</td>
+            <td>5-8</td>
+            <td>150-240</td>
+            <td>₹800</td>
+            <td>₹1.2-1.9L</td>
+          </tr>
+          <tr>
+            <td>Month 2</td>
+            <td>8-12</td>
+            <td>240-360</td>
+            <td>₹900</td>
+            <td>₹2.2-3.2L</td>
+          </tr>
+          <tr>
+            <td>Month 3</td>
+            <td>12-15</td>
+            <td>360-450</td>
+            <td>₹1,000</td>
+            <td>₹3.6-4.5L</td>
+          </tr>
+          <tr>
+            <td>Month 6</td>
+            <td>15-20</td>
+            <td>450-600</td>
+            <td>₹1,200</td>
+            <td>₹5.4-7.2L</td>
+          </tr>
+          <tr>
+            <td>Month 12</td>
+            <td>20-25</td>
+            <td>600-750</td>
+            <td>₹1,500</td>
+            <td>₹9-11.25L</td>
+          </tr>
+          <tr>
+            <td>Month 18</td>
+            <td>25-35</td>
+            <td>750-1,050</td>
+            <td>₹1,800</td>
+            <td>₹13.5-18.9L</td>
+          </tr>
+          <tr>
+            <td>Month 24</td>
+            <td>30-40</td>
+            <td>900-1,200</td>
+            <td>₹2,000</td>
+            <td>₹18-24L</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2.3 Average Bill Size Validation</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Bill Size</th>
+            <th>Realistic for...</th>
+            <th>Product Mix Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>₹600-800</td>
+            <td>Curious first-timers, single items</td>
+            <td>1-2 specialty items</td>
+          </tr>
+          <tr>
+            <td>₹1,000-1,500</td>
+            <td>Regular customers, weekly top-ups</td>
+            <td>Fresh produce + 2-3 pantry items</td>
+          </tr>
+          <tr>
+            <td>₹2,000-3,000</td>
+            <td>Loyal customers, full weekly shop</td>
+            <td>Full grocery run</td>
+          </tr>
+          <tr>
+            <td>₹5,000+</td>
+            <td>HNI customers, special occasions</td>
+            <td>Bulk buying, gift hampers, imports</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2.4 Margin Validation</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Your Margin</th>
+            <th>Realistic?</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Fresh Produce</td>
+            <td>30%</td>
+            <td class="green">✅ REALISTIC</td>
+            <td>25-35% standard</td>
+          </tr>
+          <tr>
+            <td class="highlight">Packaged/Pantry</td>
+            <td>45%</td>
+            <td class="yellow">⚠️ OPTIMISTIC</td>
+            <td>Branded organic: 25-35%</td>
+          </tr>
+          <tr>
+            <td class="highlight">Prepared Foods/Juice</td>
+            <td>45%</td>
+            <td class="green">✅ ACHIEVABLE</td>
+            <td>50-60% margin possible</td>
+          </tr>
+          <tr>
+            <td class="highlight">Premium Imports</td>
+            <td>45%</td>
+            <td class="yellow">⚠️ LOW END</td>
+            <td>60-80% margin but slow turnover</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="card">
+        <p class="card-title">Blended Margin Summary</p>
+        <p>
+          <strong>Year 1 Blended Margin:</strong>
+          <span class="yellow">34%</span> &nbsp;|&nbsp;
+          <strong>Year 2+ Blended Margin:</strong>
+          <span class="green">38.3%</span>
+        </p>
+        <p>
+          Your 37.5% is achievable but requires strong private label, prepared
+          foods/juice bar, and direct farm sourcing.
+        </p>
+        <p><strong>Conservative Year 1 Margin: 32-35%</strong></p>
+      </div>
+
+      <!-- PART 3 -->
+      <h2>Part 3: Revised Financial Model</h2>
+      <h3>3.1 Realistic Break-Even Analysis</h3>
+      <div class="grid-2">
+        <div class="card">
+          <p class="card-title">Your Calculation</p>
+          <p>Fixed Costs: ₹2,50,000</p>
+          <p>Margin: 37.5%</p>
+          <p>Break-even: <strong>₹6.67L/month</strong></p>
+        </div>
+        <div class="card" style="border-color: var(--accent)">
+          <p class="card-title" style="color: var(--red)">
+            Realistic Calculation
+          </p>
+          <p>Fixed Costs: ₹4,44,000</p>
+          <p>Margin: 34%</p>
+          <p>Break-even: <strong class="red">₹13.06L/month</strong></p>
+        </div>
+      </div>
+
+      <h3>3.2 Realistic Scenarios (First 12 Months)</h3>
+      <div class="phase">
+        <p class="phase-title">Month 1-3: Launch Phase</p>
+        <p>
+          8-12 customers/day | ₹800 avg bill | Revenue: ₹1.92-2.88L |
+          <strong class="red">Net: -₹3.46 to -₹3.78L LOSS</strong>
+        </p>
+      </div>
+      <div class="phase">
+        <p class="phase-title">Month 4-6: Growth Phase</p>
+        <p>
+          15-18 customers/day | ₹1,100 avg bill | Revenue: ₹4.95-5.94L |
+          <strong class="red">Net: -₹2.36 to -₹2.71L LOSS</strong>
+        </p>
+      </div>
+      <div class="phase">
+        <p class="phase-title">Month 7-9: Traction Phase</p>
+        <p>
+          20-23 customers/day | ₹1,300 avg bill | Revenue: ₹7.8-8.97L |
+          <strong class="yellow">Net: -₹1.21 to -₹1.63L LOSS</strong>
+        </p>
+      </div>
+      <div class="phase">
+        <p class="phase-title">Month 10-12: Maturity Phase</p>
+        <p>
+          25-28 customers/day | ₹1,500 avg bill | Revenue: ₹11.25-12.6L |
+          <strong class="green">Net: -₹27,600 to +₹22,000 (Break-even!)</strong>
+        </p>
+      </div>
+
+      <h3>3.3 Realistic 24-Month Projections</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Daily Cust.</th>
+            <th>Avg Bill</th>
+            <th>Monthly Rev.</th>
+            <th>Monthly P&L</th>
+            <th>Cumulative P&L</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Month 1-3</td>
+            <td>10</td>
+            <td>₹800</td>
+            <td>₹2.4L</td>
+            <td class="red">-₹3.6L</td>
+            <td class="red">-₹10.8L</td>
+          </tr>
+          <tr>
+            <td>Month 4-6</td>
+            <td>16</td>
+            <td>₹1,100</td>
+            <td>₹5.28L</td>
+            <td class="red">-₹2.5L</td>
+            <td class="red">-₹18.3L</td>
+          </tr>
+          <tr>
+            <td>Month 7-9</td>
+            <td>22</td>
+            <td>₹1,300</td>
+            <td>₹8.58L</td>
+            <td class="yellow">-₹1.35L</td>
+            <td class="red">-₹22.35L</td>
+          </tr>
+          <tr>
+            <td>Month 10-12</td>
+            <td>27</td>
+            <td>₹1,500</td>
+            <td>₹12.15L</td>
+            <td class="green">+₹5K</td>
+            <td class="red">-₹22.2L</td>
+          </tr>
+          <tr>
+            <td>Month 13-18</td>
+            <td>32</td>
+            <td>₹1,800</td>
+            <td>₹17.28L</td>
+            <td class="green">+₹1.8L</td>
+            <td class="yellow">-₹11.4L</td>
+          </tr>
+          <tr>
+            <td>Month 19-24</td>
+            <td>38</td>
+            <td>₹2,000</td>
+            <td>₹22.8L</td>
+            <td class="green">+₹4.0L</td>
+            <td class="green">+₹12.6L</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="verdict-box">
+        <p>
+          <strong>First Profitable Month:</strong> Month 11-12 &nbsp;|&nbsp;
+          <strong>Total Investment Recovered:</strong> Month 22-24
+        </p>
+      </div>
+
+      <!-- PART 4 -->
+      <h2>Part 4: Capital Requirement Reality Check</h2>
+      <h3>4.1 Initial Investment</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Investment Item</th>
+            <th>Your Estimate</th>
+            <th>Validation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Interior + Furniture</td>
+            <td>₹20L</td>
+            <td class="yellow">⚠️ ₹25-30L realistic for premium boutique</td>
+          </tr>
+          <tr>
+            <td class="highlight">Initial Inventory</td>
+            <td>₹6L</td>
+            <td class="green">✅ Reasonable — start ₹4-6L</td>
+          </tr>
+          <tr>
+            <td class="highlight">Security Deposit</td>
+            <td>₹4.5L</td>
+            <td class="green">✅ Correct (3 months rent)</td>
+          </tr>
+          <tr>
+            <td class="highlight">Misc Setup</td>
+            <td>₹2L</td>
+            <td class="red">❌ ₹5-8L realistic</td>
+          </tr>
+          <tr style="background: var(--surface2)">
+            <td class="highlight" style="color: var(--accent2)">TOTAL</td>
+            <td>₹32-35L</td>
+            <td class="red highlight">₹38-50L realistic</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>4.2 Working Capital & Grand Total</h3>
+      <div class="card" style="border-color: var(--red)">
+        <p class="card-title" style="color: var(--red)">
+          The Number Everyone Forgets: RUNWAY CAPITAL
+        </p>
+        <p>
+          Average monthly loss (Month 1-10): ₹2.2 lakh →
+          <strong>Total losses to absorb: ₹22 lakh</strong>
+        </p>
+        <table style="margin-top: 12px">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Initial Setup</td>
+              <td>₹38-50L</td>
+            </tr>
+            <tr>
+              <td>Working Capital/Losses</td>
+              <td>₹22-25L</td>
+            </tr>
+            <tr>
+              <td>Buffer (15%)</td>
+              <td>₹10L</td>
+            </tr>
+            <tr style="background: var(--surface2)">
+              <td class="highlight" style="color: var(--red)">GRAND TOTAL</td>
+              <td class="highlight red">₹70-85 LAKH</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 12px">
+          <strong>Your Model:</strong> ₹35L →
+          <strong class="red">Reality: ₹70-85L (100% more!)</strong>
+        </p>
+      </div>
+
+      <!-- PART 5 -->
+      <h2>Part 5: Scenario Planning</h2>
+      <div class="grid-2">
+        <div class="card" style="border-color: var(--green)">
+          <p class="card-title" style="color: var(--green)">
+            🏆 Best Case (20% Probability)
+          </p>
+          <p>
+            40 customers/day by Month 9<br />Break-even: Month 8<br />Capital:
+            ₹55L<br />ROI: 18 months
+          </p>
+        </div>
+        <div class="card" style="border-color: var(--accent2)">
+          <p class="card-title">📊 Base Case (50% Probability)</p>
+          <p>
+            28 customers/day by Month 12<br />Break-even: Month 11-12<br />Capital:
+            ₹70L<br />ROI: 24 months
+          </p>
+        </div>
+      </div>
+      <div class="card" style="border-color: var(--red)">
+        <p class="card-title" style="color: var(--red)">
+          ⚠️ Worst Case (30% Probability)
+        </p>
+        <p>
+          Only 18 customers/day by Month 12 | Break-even: Month 18-20 | Capital:
+          ₹90L+ | Decision Point: Re-evaluate at Month 9
+        </p>
+      </div>
+
+      <!-- PART 6 -->
+      <h2>Part 6: Critical Success Factors</h2>
+      <h3>6.1 Key Milestones</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Milestone</th>
+            <th>Target Month</th>
+            <th>If You Miss...</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>10 customers/day</td>
+            <td>Month 2</td>
+            <td class="yellow">⚠️ Marketing isn't working</td>
+          </tr>
+          <tr>
+            <td>15 customers/day</td>
+            <td>Month 4</td>
+            <td class="red">🚨 Product-market fit issues</td>
+          </tr>
+          <tr>
+            <td>20 customers/day</td>
+            <td>Month 7</td>
+            <td class="red">❌ Consider pivot/closure</td>
+          </tr>
+          <tr>
+            <td>₹1,200 avg bill</td>
+            <td>Month 6</td>
+            <td class="yellow">⚠️ Not premium enough</td>
+          </tr>
+          <tr>
+            <td>35% gross margin</td>
+            <td>Month 6</td>
+            <td class="red">🚨 Sourcing/pricing wrong</td>
+          </tr>
+          <tr>
+            <td>5 repeat customers</td>
+            <td>Month 3</td>
+            <td class="red">❌ Experience failing</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>6.2 Most Dangerous Assumptions</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Assumption</th>
+            <th>Risk</th>
+            <th>Reality Check</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>"We'll get 20 customers/day from Month 1"</td>
+            <td class="red">🔴 CRITICAL</td>
+            <td>Takes 6+ months minimum</td>
+          </tr>
+          <tr>
+            <td>"Only need ₹35L capital"</td>
+            <td class="red">🔴 CRITICAL</td>
+            <td>Need ₹70L+ with runway</td>
+          </tr>
+          <tr>
+            <td>"Only 2 staff can run premium store"</td>
+            <td class="red">🔴 CRITICAL</td>
+            <td>Need 5-6 minimum</td>
+          </tr>
+          <tr>
+            <td>"37.5% margin from Day 1"</td>
+            <td class="yellow">🟡 MODERATE</td>
+            <td>Takes time to optimize mix</td>
+          </tr>
+          <tr>
+            <td>"₹2,000 average bill easily"</td>
+            <td class="yellow">🟡 MODERATE</td>
+            <td>Year 2 target, not Year 1</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- PART 7 -->
+      <h2>Part 7: Recommendations</h2>
+      <h3>7.1 Before You Launch — Do This First (4-8 weeks)</h3>
+      <div class="action-step">
+        <h4>1. Test with Pop-Up (₹2-3L investment)</h4>
+        <ul>
+          <li>Rent weekend space at a premium location</li>
+          <li>
+            Run for 4 weekends, track # customers, average bill, repeat rate
+          </li>
+          <li>
+            <strong>KEY METRIC:</strong> If you can't get 30-40 customers on
+            Saturday, the permanent store will struggle
+          </li>
+        </ul>
+      </div>
+      <div class="action-step">
+        <h4>2. Pre-Launch Membership Sales (₹0 investment)</h4>
+        <ul>
+          <li>Sell 100 founding memberships at ₹15,000/year</li>
+          <li>Generates ₹15L upfront capital + validates demand</li>
+          <li>
+            <strong>KEY METRIC:</strong> If you can't sell 100 memberships,
+            market isn't ready
+          </li>
+        </ul>
+      </div>
+      <div class="action-step">
+        <h4>3. Reduce Initial Capital (if budget is limited)</h4>
+        <ul>
+          <li>Start with 800-1,000 sq ft instead of 1,500</li>
+          <li>Simpler interior (₹12-15L vs ₹25L)</li>
+          <li>Smaller inventory (₹3-4L) — <strong>Saves ₹15-20L</strong></li>
+        </ul>
+      </div>
+
+      <h3>7.2 Business Model Options</h3>
+      <div class="grid-2">
+        <div class="card">
+          <p class="card-title">Option A: Capital-Light</p>
+          <p>
+            800 sq ft | ₹35L investment | Fixed: ₹3.2L/mo<br />Break-even: 21
+            customers/day @ ₹1,500<br /><span class="green"
+              >✅ Fits capital, lower risk</span
+            ><br /><span class="yellow"
+              >⚠️ Less impressive, harder premium justify</span
+            >
+          </p>
+        </div>
+        <div class="card">
+          <p class="card-title">Option B: Full Premium (Your Plan)</p>
+          <p>
+            1,500 sq ft | ₹75L total | Fixed: ₹4.44L/mo<br />Break-even: Month
+            11-12<br /><span class="green">✅ Strong brand positioning</span
+            ><br /><span class="red">❌ High capital, high risk</span>
+          </p>
+        </div>
+      </div>
+      <div class="card" style="border-color: var(--green)">
+        <p class="card-title" style="color: var(--green)">
+          ⭐ Option C: Hybrid Model (Recommended)
+        </p>
+        <p>
+          1,200 sq ft | ₹58L total | Fixed: ₹3.8L/mo | Add juice bar (high
+          margin) | Partner with 2-3 premium cafes for B2B revenue
+        </p>
+      </div>
+
+      <!-- PART 8 -->
+      <h2>Part 8: The Uncomfortable Truth</h2>
+      <h3>8.1 Success Probability</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Outcome</th>
+            <th>Probability</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="red">Total Failure (Close in 12 mo)</td>
+            <td>30%</td>
+            <td>Can't reach 15 customers/day by Month 6</td>
+          </tr>
+          <tr>
+            <td class="yellow">Marginal (Barely Break-Even)</td>
+            <td>40%</td>
+            <td>Survive but not profitable for 18-24 months</td>
+          </tr>
+          <tr>
+            <td class="green">Success (Profitable, Scalable)</td>
+            <td>25%</td>
+            <td>Hit projections, profitable by Month 12</td>
+          </tr>
+          <tr>
+            <td class="blue">Home Run (₹4L+/mo profit)</td>
+            <td>5%</td>
+            <td>Exceed projections, 40+ customers/day</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>8.2 Decision Framework</h3>
+      <div class="grid-2">
+        <div class="card" style="border-color: var(--green)">
+          <p class="card-title" style="color: var(--green)">✅ PROCEED if:</p>
+          <ul>
+            <li>₹60-70L total capital available</li>
+            <li>Comfortable losing ₹20-25L in first year</li>
+            <li>Pop-up test shows 30+ customers/day</li>
+            <li>Can pre-sell 50-100 memberships</li>
+            <li>B2B customers lined up</li>
+            <li>Personal network of 100+ target customers</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color: var(--red)">
+          <p class="card-title" style="color: var(--red)">❌ PAUSE if:</p>
+          <ul>
+            <li>Only have ₹35L, no access to more</li>
+            <li>Can't afford to lose ₹20L+</li>
+            <li>Pop-up test shows weak demand</li>
+            <li>Can't pre-sell memberships</li>
+            <li>No B2B interest</li>
+            <li>Limited personal network in target segment</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- PART 9 -->
+      <h2>Part 9: Action Plan</h2>
+      <div class="phase">
+        <p class="phase-title">📅 Week 1-2: Immediate</p>
+        <ol>
+          <li>Reality check your capital — list every rupee available</li>
+          <li>
+            Create two models: Ideal (1,500 sq ft, ₹75L) and Minimum Viable (800
+            sq ft, ₹35-40L)
+          </li>
+          <li>Survey 50 people on grocery spending habits</li>
+        </ol>
+      </div>
+      <div class="phase">
+        <p class="phase-title">📅 Week 3-6: Short Term</p>
+        <ol>
+          <li>Run 4-weekend Pop-Up test (₹1.5-2L investment)</li>
+          <li>
+            Pre-sell "Founding Member" offers at ₹10,000 — goal: 100 memberships
+            = ₹10L
+          </li>
+          <li>
+            Approach 10 premium cafes/restaurants for B2B — goal: 3 committed
+            accounts
+          </li>
+        </ol>
+      </div>
+      <div class="phase">
+        <p class="phase-title">📅 Week 7-12: Medium Term</p>
+        <p>
+          <strong>If tests are positive:</strong> Finalize location, build out,
+          hire, launch marketing
+        </p>
+        <p>
+          <strong>If tests are negative:</strong> Pivot to capital-light,
+          online-first, or partner model
+        </p>
+      </div>
+
+      <!-- PART 10 -->
+      <h2>Part 10: Final Verdict</h2>
+      <div class="grid-2">
+        <div class="card" style="border-color: var(--red)">
+          <p class="card-title" style="color: var(--red)">
+            Your Original Model ❌ FANTASY
+          </p>
+          <p>Capital: ₹35L | Fixed: ₹2.5L/mo | Break-even: Month 1-3</p>
+        </div>
+        <div class="card" style="border-color: var(--green)">
+          <p class="card-title" style="color: var(--green)">
+            Realistic Model ✅ ACHIEVABLE (HIGH RISK)
+          </p>
+          <p>
+            Capital: ₹70-75L | Fixed: ₹4.44L/mo | Break-even: Month 11-12 |
+            First 12 months loss: ₹22L
+          </p>
+        </div>
+      </div>
+
+      <div class="verdict-box" style="text-align: center; margin-top: 30px">
+        <h3 style="color: var(--accent2); margin-bottom: 16px">
+          💡 "The market opportunity is real. Your understanding is strong. But
+          the numbers need work."
+        </h3>
+        <p style="font-size: 1.1rem; color: var(--text)">
+          <strong>Test, validate, then commit. In that order.</strong>
+        </p>
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          padding: 40px 0 20px;
+          color: var(--text2);
+          font-size: 0.85rem;
+        "
+      >
+        <p>BASKLY Financial Plan Validation Report • Generated February 2026</p>
+      </div>
+    </div>
+  </body>
+</html>

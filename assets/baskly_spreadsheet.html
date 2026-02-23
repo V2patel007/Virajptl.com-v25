@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BASKLY Financial Calculator — Interactive Spreadsheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0c0e14;--surface:#141722;--surface2:#1c2030;--surface3:#252a3a;--border:#2a3050;--text:#e4e7f2;--text2:#8a92b0;--accent:#6c5ce7;--accent2:#a29bfe;--green:#00d2a0;--green-bg:rgba(0,210,160,.1);--yellow:#ffd166;--yellow-bg:rgba(255,209,102,.1);--red:#ff6b6b;--red-bg:rgba(255,107,107,.1);--blue:#74b9ff;--blue-bg:rgba(116,185,255,.1)}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app-header{background:linear-gradient(135deg,rgba(108,92,231,.15),rgba(116,185,255,.08));border-bottom:1px solid var(--border);padding:28px 40px;text-align:center}
+.app-header h1{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px}
+.app-header p{color:var(--text2);font-size:.9rem;margin-top:6px}
+.tabs{display:flex;gap:4px;padding:16px 40px 0;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto}
+.tab{padding:10px 20px;font-size:.85rem;font-weight:600;color:var(--text2);cursor:pointer;border-radius:8px 8px 0 0;border:1px solid transparent;border-bottom:none;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--text);background:var(--surface2)}
+.tab.active{color:var(--accent2);background:var(--surface2);border-color:var(--border)}
+.tab-content{display:none;padding:30px 40px;max-width:1200px;margin:0 auto}
+.tab-content.active{display:block}
+.section{margin-bottom:32px}
+.section-title{font-size:1.1rem;font-weight:700;color:var(--accent2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title span{font-size:1.2rem}
+table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;border:1px solid var(--border);font-size:.88rem;margin-bottom:12px}
+thead{background:var(--surface3)}
+th{padding:10px 14px;text-align:left;font-weight:700;color:var(--accent2);font-size:.78rem;text-transform:uppercase;letter-spacing:.6px}
+td{padding:8px 14px;border-top:1px solid var(--border);color:var(--text2)}
+td.label{color:var(--text);font-weight:500}
+tbody tr:hover{background:rgba(108,92,231,.04)}
+input[type="number"]{background:var(--surface);border:1px solid var(--border);color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:600;padding:6px 10px;border-radius:6px;width:120px;text-align:right;transition:all .2s}
+input[type="number"]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,92,231,.2)}
+input[type="number"]:hover{border-color:var(--accent2)}
+.calc{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--blue);font-size:.88rem}
+.calc-green{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--green)}
+.calc-red{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--red)}
+.calc-yellow{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--yellow)}
+.total-row{background:var(--surface3)!important}
+.total-row td{font-weight:700;color:var(--text);border-top:2px solid var(--accent)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;transition:all .3s}
+.kpi:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.kpi-value{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:800;margin-bottom:4px}
+.kpi-label{font-size:.75rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.note{background:var(--surface);border-left:3px solid var(--yellow);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.85rem;color:var(--text2)}
+.note strong{color:var(--yellow)}
+.chart-bar{height:20px;border-radius:4px;transition:width .4s ease;min-width:2px}
+.bar-container{background:var(--surface);border-radius:4px;overflow:hidden;height:20px;position:relative}
+.legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.print-btn{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;padding:12px 20px;border-radius:10px;font-weight:600;cursor:pointer;font-size:.85rem;z-index:99;box-shadow:0 4px 20px rgba(108,92,231,.4);display:flex;align-items:center;gap:6px}
+.print-btn:hover{background:var(--accent2);transform:translateY(-1px)}
+.reset-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-size:.82rem;transition:all .2s}
+.reset-btn:hover{border-color:var(--red);color:var(--red)}
+.export-btn{background:linear-gradient(135deg,#00b894,#00cec9);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-size:.82rem;transition:all .2s;margin-left:8px}
+.export-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,184,148,.3)}
+.save-indicator{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;padding:4px 12px;border-radius:20px;transition:all .4s;margin-left:12px}
+.save-indicator.saved{color:var(--green);background:rgba(0,210,160,.1)}
+.save-indicator.saving{color:var(--yellow);background:rgba(255,209,102,.1)}
+.save-indicator.unsaved{color:var(--text2);background:var(--surface2)}
+.toast{position:fixed;top:20px;right:20px;padding:14px 24px;border-radius:10px;font-size:.88rem;font-weight:600;z-index:999;transform:translateX(120%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateX(0)}
+.toast-success{background:var(--green);color:#fff;box-shadow:0 6px 24px rgba(0,210,160,.35)}
+.toast-info{background:var(--blue);color:#fff;box-shadow:0 6px 24px rgba(116,185,255,.35)}
+.toast-warn{background:var(--yellow);color:#222;box-shadow:0 6px 24px rgba(255,209,102,.35)}
+.header-actions{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+@media(max-width:768px){.tabs{padding:12px 16px 0}.tab-content{padding:20px 16px}input[type="number"]{width:90px}.kpi-grid{grid-template-columns:1fr 1fr}.header-actions{flex-direction:column}}
+@media print{.tabs,.print-btn,.reset-btn,.export-btn,.save-indicator,.toast,.header-actions{display:none}.tab-content{display:block!important}body{background:#fff;color:#222}table{border:1px solid #ccc}th{background:#eee;color:#333}td{color:#444;border-color:#ddd}.kpi{border:1px solid #ddd}.kpi-value{color:#333}}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+<h1>BASKLY Financial Calculator</h1>
+<p>Interactive Spreadsheet — Change any input value to recalculate everything automatically</p>
+<div class="header-actions">
+<span class="save-indicator unsaved" id="saveIndicator">⏳ Not saved yet</span>
+<button class="export-btn" onclick="exportToCSV()">📥 Export to Excel CSV</button>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<div class="tabs" id="tabs">
+<div class="tab active" onclick="switchTab('expenses')">📊 Expenses</div>
+<div class="tab" onclick="switchTab('revenue')">💰 Revenue</div>
+<div class="tab" onclick="switchTab('breakeven')">📈 Break-Even</div>
+<div class="tab" onclick="switchTab('monthly')">📅 Monthly P&L</div>
+<div class="tab" onclick="switchTab('capital')">🏦 Capital</div>
+<div class="tab" onclick="switchTab('scenarios')">🎯 Scenarios</div>
+<div class="tab" onclick="switchTab('dashboard')">🖥️ Dashboard</div>
+</div>
+
+<!-- TAB 1: EXPENSES -->
+<div class="tab-content active" id="tab-expenses">
+<div class="section">
+<div class="section-title"><span>🏢</span> Fixed Monthly Costs — Editable Inputs</div>
+<div class="note"><strong>Tip:</strong> Click any blue number to change it. All calculations update automatically.</div>
+<table>
+<thead><tr><th>Expense Category</th><th>Your Estimate (₹)</th><th>Realistic (₹)</th><th>Difference</th></tr></thead>
+<tbody>
+<tr><td class="label">Rent</td><td><input type="number" id="ex_rent_yours" value="150000" onchange="calc()"></td><td><input type="number" id="ex_rent_real" value="150000" onchange="calc()"></td><td class="calc" id="ex_rent_diff"></td></tr>
+<tr><td class="label">Staff Salary</td><td><input type="number" id="ex_staff_yours" value="30000" onchange="calc()"></td><td><input type="number" id="ex_staff_real" value="100000" onchange="calc()"></td><td class="calc" id="ex_staff_diff"></td></tr>
+<tr><td class="label">Electricity</td><td><input type="number" id="ex_elec_yours" value="15000" onchange="calc()"></td><td><input type="number" id="ex_elec_real" value="25000" onchange="calc()"></td><td class="calc" id="ex_elec_diff"></td></tr>
+<tr><td class="label">Packaging</td><td><input type="number" id="ex_pkg_yours" value="25000" onchange="calc()"></td><td><input type="number" id="ex_pkg_real" value="25000" onchange="calc()"></td><td class="calc" id="ex_pkg_diff"></td></tr>
+<tr><td class="label">Marketing</td><td><input type="number" id="ex_mkt_yours" value="0" onchange="calc()"></td><td><input type="number" id="ex_mkt_real" value="50000" onchange="calc()"></td><td class="calc" id="ex_mkt_diff"></td></tr>
+<tr><td class="label">Delivery & Logistics</td><td><input type="number" id="ex_del_yours" value="0" onchange="calc()"></td><td><input type="number" id="ex_del_real" value="20000" onchange="calc()"></td><td class="calc" id="ex_del_diff"></td></tr>
+<tr><td class="label">Technology / Software</td><td><input type="number" id="ex_tech_yours" value="0" onchange="calc()"></td><td><input type="number" id="ex_tech_real" value="12000" onchange="calc()"></td><td class="calc" id="ex_tech_diff"></td></tr>
+<tr><td class="label">Insurance</td><td><input type="number" id="ex_ins_yours" value="0" onchange="calc()"></td><td><input type="number" id="ex_ins_real" value="7000" onchange="calc()"></td><td class="calc" id="ex_ins_diff"></td></tr>
+<tr><td class="label">Maintenance & Repairs</td><td><input type="number" id="ex_maint_yours" value="0" onchange="calc()"></td><td><input type="number" id="ex_maint_real" value="10000" onchange="calc()"></td><td class="calc" id="ex_maint_diff"></td></tr>
+<tr><td class="label">Wastage / Spoilage</td><td><input type="number" id="ex_waste_yours" value="0" onchange="calc()"></td><td><input type="number" id="ex_waste_real" value="20000" onchange="calc()"></td><td class="calc" id="ex_waste_diff"></td></tr>
+<tr><td class="label">Miscellaneous / Other</td><td><input type="number" id="ex_misc_yours" value="30000" onchange="calc()"></td><td><input type="number" id="ex_misc_real" value="25000" onchange="calc()"></td><td class="calc" id="ex_misc_diff"></td></tr>
+<tr class="total-row"><td class="label">TOTAL MONTHLY FIXED</td><td class="calc" id="ex_total_yours"></td><td class="calc" id="ex_total_real"></td><td class="calc" id="ex_total_diff"></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="section">
+<div class="section-title"><span>👥</span> Staff Cost Breakdown</div>
+<table>
+<thead><tr><th>Role</th><th># Staff</th><th>Salary Each (₹)</th><th>Total (₹)</th></tr></thead>
+<tbody>
+<tr><td class="label">Store Manager</td><td><input type="number" id="s_mgr_n" value="1" style="width:60px" onchange="calcStaff()"></td><td><input type="number" id="s_mgr_sal" value="27500" onchange="calcStaff()"></td><td class="calc" id="s_mgr_tot"></td></tr>
+<tr><td class="label">Sales Associates</td><td><input type="number" id="s_sa_n" value="3" style="width:60px" onchange="calcStaff()"></td><td><input type="number" id="s_sa_sal" value="16000" onchange="calcStaff()"></td><td class="calc" id="s_sa_tot"></td></tr>
+<tr><td class="label">Cashier</td><td><input type="number" id="s_cash_n" value="1" style="width:60px" onchange="calcStaff()"></td><td><input type="number" id="s_cash_sal" value="13500" onchange="calcStaff()"></td><td class="calc" id="s_cash_tot"></td></tr>
+<tr><td class="label">Helper / Stockkeeper</td><td><input type="number" id="s_hlp_n" value="1" style="width:60px" onchange="calcStaff()"></td><td><input type="number" id="s_hlp_sal" value="11000" onchange="calcStaff()"></td><td class="calc" id="s_hlp_tot"></td></tr>
+<tr><td class="label">PF/ESI Rate (%)</td><td colspan="2"><input type="number" id="s_pf_rate" value="12" style="width:80px" onchange="calcStaff()">%</td><td class="calc" id="s_pf_amt"></td></tr>
+<tr><td class="label">Meals / Uniforms</td><td colspan="2"><input type="number" id="s_extras" value="5000" onchange="calcStaff()"></td><td class="calc" id="s_extras_out"></td></tr>
+<tr class="total-row"><td class="label">TOTAL STAFF COST</td><td colspan="2"></td><td class="calc" id="s_total"></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- TAB 2: REVENUE -->
+<div class="tab-content" id="tab-revenue">
+<div class="section">
+<div class="section-title"><span>🛒</span> Revenue Inputs</div>
+<table>
+<thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td class="label">Operating Days per Month</td><td><input type="number" id="rev_days" value="30" onchange="calc()"></td></tr>
+<tr><td class="label">Daily Customers</td><td><input type="number" id="rev_cust" value="20" onchange="calc()"></td></tr>
+<tr><td class="label">Average Bill Size (₹)</td><td><input type="number" id="rev_bill" value="1000" onchange="calc()"></td></tr>
+</tbody>
+</table>
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-value calc" id="rev_monthly_cust"></div><div class="kpi-label">Monthly Customers</div></div>
+<div class="kpi"><div class="kpi-value calc-green" id="rev_monthly_rev"></div><div class="kpi-label">Monthly Revenue</div></div>
+<div class="kpi"><div class="kpi-value calc" id="rev_annual_rev"></div><div class="kpi-label">Annual Revenue</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title"><span>📊</span> Margin Analysis</div>
+<table>
+<thead><tr><th>Category</th><th>% of Sales</th><th>Margin %</th><th>Contribution</th></tr></thead>
+<tbody>
+<tr><td class="label">Fresh Produce</td><td><input type="number" id="m_fresh_pct" value="40" style="width:70px" onchange="calc()">%</td><td><input type="number" id="m_fresh_margin" value="30" style="width:70px" onchange="calc()">%</td><td class="calc" id="m_fresh_cont"></td></tr>
+<tr><td class="label">Branded Organic/Pantry</td><td><input type="number" id="m_branded_pct" value="40" style="width:70px" onchange="calc()">%</td><td><input type="number" id="m_branded_margin" value="30" style="width:70px" onchange="calc()">%</td><td class="calc" id="m_branded_cont"></td></tr>
+<tr><td class="label">Private Label / Prepared</td><td><input type="number" id="m_private_pct" value="20" style="width:70px" onchange="calc()">%</td><td><input type="number" id="m_private_margin" value="50" style="width:70px" onchange="calc()">%</td><td class="calc" id="m_private_cont"></td></tr>
+<tr class="total-row"><td class="label">BLENDED MARGIN</td><td class="calc" id="m_total_pct"></td><td class="calc-green" id="m_blended"></td><td class="calc-green" id="m_blended_amt"></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- TAB 3: BREAK-EVEN -->
+<div class="tab-content" id="tab-breakeven">
+<div class="section">
+<div class="section-title"><span>📈</span> Break-Even Calculator</div>
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-value calc" id="be_fixed"></div><div class="kpi-label">Monthly Fixed Costs (Realistic)</div></div>
+<div class="kpi"><div class="kpi-value calc-green" id="be_margin"></div><div class="kpi-label">Blended Gross Margin</div></div>
+<div class="kpi"><div class="kpi-value calc-yellow" id="be_revenue"></div><div class="kpi-label">Break-Even Revenue / Month</div></div>
+<div class="kpi"><div class="kpi-value calc" id="be_daily_rev"></div><div class="kpi-label">Break-Even Revenue / Day</div></div>
+</div>
+
+<div class="section-title" style="margin-top:30px"><span>🎯</span> How Many Customers to Break Even?</div>
+<table>
+<thead><tr><th>Avg Bill Size (₹)</th><th>Customers/Day Needed</th><th>Customers/Month Needed</th></tr></thead>
+<tbody id="be_table_body"></tbody>
+</table>
+</div>
+</div>
+
+<!-- TAB 4: MONTHLY P&L -->
+<div class="tab-content" id="tab-monthly">
+<div class="section">
+<div class="section-title"><span>📅</span> 24-Month Projection — Edit any phase inputs</div>
+<table>
+<thead><tr><th>Period</th><th>Daily Cust.</th><th>Avg Bill (₹)</th><th>Margin %</th><th>Monthly Rev.</th><th>Gross Profit</th><th>Fixed Costs</th><th>Net P&L</th><th>Cumulative</th></tr></thead>
+<tbody>
+<tr><td class="label">Month 1-3</td><td><input type="number" id="p1_cust" value="10" style="width:65px" onchange="calcPL()"></td><td><input type="number" id="p1_bill" value="800" style="width:80px" onchange="calcPL()"></td><td><input type="number" id="p1_margin" value="34" style="width:60px" onchange="calcPL()">%</td><td class="calc" id="p1_rev"></td><td class="calc" id="p1_gp"></td><td class="calc" id="p1_fc"></td><td id="p1_net"></td><td id="p1_cum"></td></tr>
+<tr><td class="label">Month 4-6</td><td><input type="number" id="p2_cust" value="16" style="width:65px" onchange="calcPL()"></td><td><input type="number" id="p2_bill" value="1100" style="width:80px" onchange="calcPL()"></td><td><input type="number" id="p2_margin" value="35" style="width:60px" onchange="calcPL()">%</td><td class="calc" id="p2_rev"></td><td class="calc" id="p2_gp"></td><td class="calc" id="p2_fc"></td><td id="p2_net"></td><td id="p2_cum"></td></tr>
+<tr><td class="label">Month 7-9</td><td><input type="number" id="p3_cust" value="22" style="width:65px" onchange="calcPL()"></td><td><input type="number" id="p3_bill" value="1300" style="width:80px" onchange="calcPL()"></td><td><input type="number" id="p3_margin" value="36" style="width:60px" onchange="calcPL()">%</td><td class="calc" id="p3_rev"></td><td class="calc" id="p3_gp"></td><td class="calc" id="p3_fc"></td><td id="p3_net"></td><td id="p3_cum"></td></tr>
+<tr><td class="label">Month 10-12</td><td><input type="number" id="p4_cust" value="27" style="width:65px" onchange="calcPL()"></td><td><input type="number" id="p4_bill" value="1500" style="width:80px" onchange="calcPL()"></td><td><input type="number" id="p4_margin" value="37" style="width:60px" onchange="calcPL()">%</td><td class="calc" id="p4_rev"></td><td class="calc" id="p4_gp"></td><td class="calc" id="p4_fc"></td><td id="p4_net"></td><td id="p4_cum"></td></tr>
+<tr><td class="label">Month 13-18</td><td><input type="number" id="p5_cust" value="32" style="width:65px" onchange="calcPL()"></td><td><input type="number" id="p5_bill" value="1800" style="width:80px" onchange="calcPL()"></td><td><input type="number" id="p5_margin" value="38" style="width:60px" onchange="calcPL()">%</td><td class="calc" id="p5_rev"></td><td class="calc" id="p5_gp"></td><td class="calc" id="p5_fc"></td><td id="p5_net"></td><td id="p5_cum"></td></tr>
+<tr><td class="label">Month 19-24</td><td><input type="number" id="p6_cust" value="38" style="width:65px" onchange="calcPL()"></td><td><input type="number" id="p6_bill" value="2000" style="width:80px" onchange="calcPL()"></td><td><input type="number" id="p6_margin" value="38" style="width:60px" onchange="calcPL()">%</td><td class="calc" id="p6_rev"></td><td class="calc" id="p6_gp"></td><td class="calc" id="p6_fc"></td><td id="p6_net"></td><td id="p6_cum"></td></tr>
+</tbody>
+</table>
+<div class="note"><strong>Note:</strong> Monthly P&L uses the <strong>Realistic Fixed Costs</strong> from the Expenses tab. Change those to see the impact here.</div>
+</div>
+</div>
+
+<!-- TAB 5: CAPITAL -->
+<div class="tab-content" id="tab-capital">
+<div class="section">
+<div class="section-title"><span>🏗️</span> Initial Setup Investment</div>
+<table>
+<thead><tr><th>Item</th><th>Your Estimate (₹)</th><th>Realistic (₹)</th></tr></thead>
+<tbody>
+<tr><td class="label">Interior + Furniture</td><td><input type="number" id="cap_int_yours" value="2000000" onchange="calcCap()"></td><td><input type="number" id="cap_int_real" value="2750000" onchange="calcCap()"></td></tr>
+<tr><td class="label">Initial Inventory</td><td><input type="number" id="cap_inv_yours" value="600000" onchange="calcCap()"></td><td><input type="number" id="cap_inv_real" value="600000" onchange="calcCap()"></td></tr>
+<tr><td class="label">Security Deposit</td><td><input type="number" id="cap_dep_yours" value="450000" onchange="calcCap()"></td><td><input type="number" id="cap_dep_real" value="450000" onchange="calcCap()"></td></tr>
+<tr><td class="label">POS/Refrigeration/AC/Signage</td><td><input type="number" id="cap_equip_yours" value="0" onchange="calcCap()"></td><td><input type="number" id="cap_equip_real" value="1000000" onchange="calcCap()"></td></tr>
+<tr><td class="label">Licenses, Legal, Incorporation</td><td><input type="number" id="cap_lic_yours" value="0" onchange="calcCap()"></td><td><input type="number" id="cap_lic_real" value="100000" onchange="calcCap()"></td></tr>
+<tr><td class="label">Launch Marketing</td><td><input type="number" id="cap_launch_yours" value="0" onchange="calcCap()"></td><td><input type="number" id="cap_launch_real" value="250000" onchange="calcCap()"></td></tr>
+<tr><td class="label">Misc Setup</td><td><input type="number" id="cap_misc_yours" value="200000" onchange="calcCap()"></td><td><input type="number" id="cap_misc_real" value="200000" onchange="calcCap()"></td></tr>
+<tr class="total-row"><td class="label">TOTAL SETUP</td><td class="calc" id="cap_setup_yours"></td><td class="calc" id="cap_setup_real"></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="section">
+<div class="section-title"><span>💸</span> Working Capital & Total Requirement</div>
+<table>
+<thead><tr><th>Item</th><th>Amount (₹)</th></tr></thead>
+<tbody>
+<tr><td class="label">Months of Losses to Cover</td><td><input type="number" id="cap_loss_months" value="10" style="width:80px" onchange="calcCap()"> months</td></tr>
+<tr><td class="label">Average Monthly Loss (₹)</td><td><input type="number" id="cap_avg_loss" value="220000" onchange="calcCap()"></td></tr>
+<tr><td class="label">Total Working Capital Needed</td><td class="calc" id="cap_working"></td></tr>
+<tr><td class="label">Buffer % (Safety Margin)</td><td><input type="number" id="cap_buffer_pct" value="15" style="width:70px" onchange="calcCap()">%</td></tr>
+<tr><td class="label">Buffer Amount</td><td class="calc" id="cap_buffer"></td></tr>
+<tr class="total-row"><td class="label">GRAND TOTAL CAPITAL NEEDED</td><td class="calc-red" id="cap_grand_total" style="font-size:1.1rem"></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-value calc" id="cap_yours_total"></div><div class="kpi-label">Your Estimate (Total)</div></div>
+<div class="kpi"><div class="kpi-value calc-red" id="cap_real_total"></div><div class="kpi-label">Realistic (Total)</div></div>
+<div class="kpi"><div class="kpi-value calc-yellow" id="cap_gap"></div><div class="kpi-label">Capital Gap</div></div>
+</div>
+</div>
+
+<!-- TAB 6: SCENARIOS -->
+<div class="tab-content" id="tab-scenarios">
+<div class="section">
+<div class="section-title"><span>🏆</span> Best Case Scenario (20% Probability)</div>
+<table>
+<thead><tr><th>Parameter</th><th>Value</th><th>Calculated</th></tr></thead>
+<tbody>
+<tr><td class="label">Daily Customers (Month 12)</td><td><input type="number" id="sc_best_cust" value="40" style="width:80px" onchange="calcScenarios()"></td><td></td></tr>
+<tr><td class="label">Average Bill (₹)</td><td><input type="number" id="sc_best_bill" value="1800" style="width:100px" onchange="calcScenarios()"></td><td></td></tr>
+<tr><td class="label">Margin %</td><td><input type="number" id="sc_best_margin" value="38" style="width:70px" onchange="calcScenarios()">%</td><td></td></tr>
+<tr><td class="label">Monthly Revenue</td><td></td><td class="calc-green" id="sc_best_rev"></td></tr>
+<tr><td class="label">Monthly Profit</td><td></td><td class="calc-green" id="sc_best_profit"></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section">
+<div class="section-title"><span>📊</span> Base Case Scenario (50% Probability)</div>
+<table>
+<thead><tr><th>Parameter</th><th>Value</th><th>Calculated</th></tr></thead>
+<tbody>
+<tr><td class="label">Daily Customers (Month 12)</td><td><input type="number" id="sc_base_cust" value="28" style="width:80px" onchange="calcScenarios()"></td><td></td></tr>
+<tr><td class="label">Average Bill (₹)</td><td><input type="number" id="sc_base_bill" value="1500" style="width:100px" onchange="calcScenarios()"></td><td></td></tr>
+<tr><td class="label">Margin %</td><td><input type="number" id="sc_base_margin" value="37" style="width:70px" onchange="calcScenarios()">%</td><td></td></tr>
+<tr><td class="label">Monthly Revenue</td><td></td><td class="calc" id="sc_base_rev"></td></tr>
+<tr><td class="label">Monthly Profit</td><td></td><td id="sc_base_profit"></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section">
+<div class="section-title"><span>⚠️</span> Worst Case Scenario (30% Probability)</div>
+<table>
+<thead><tr><th>Parameter</th><th>Value</th><th>Calculated</th></tr></thead>
+<tbody>
+<tr><td class="label">Daily Customers (Month 12)</td><td><input type="number" id="sc_worst_cust" value="18" style="width:80px" onchange="calcScenarios()"></td><td></td></tr>
+<tr><td class="label">Average Bill (₹)</td><td><input type="number" id="sc_worst_bill" value="1200" style="width:100px" onchange="calcScenarios()"></td><td></td></tr>
+<tr><td class="label">Margin %</td><td><input type="number" id="sc_worst_margin" value="34" style="width:70px" onchange="calcScenarios()">%</td><td></td></tr>
+<tr><td class="label">Monthly Revenue</td><td></td><td class="calc-yellow" id="sc_worst_rev"></td></tr>
+<tr><td class="label">Monthly Profit</td><td></td><td class="calc-red" id="sc_worst_profit"></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- TAB 7: DASHBOARD -->
+<div class="tab-content" id="tab-dashboard">
+<div class="section">
+<div class="section-title"><span>🖥️</span> Key Metrics Dashboard</div>
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-value calc-red" id="d_fixed"></div><div class="kpi-label">Realistic Fixed Costs/Mo</div></div>
+<div class="kpi"><div class="kpi-value calc-green" id="d_margin"></div><div class="kpi-label">Blended Margin</div></div>
+<div class="kpi"><div class="kpi-value calc-yellow" id="d_breakeven"></div><div class="kpi-label">Break-Even Revenue/Mo</div></div>
+<div class="kpi"><div class="kpi-value calc" id="d_be_cust"></div><div class="kpi-label">Customers/Day for Break-Even</div></div>
+<div class="kpi"><div class="kpi-value calc-red" id="d_capital"></div><div class="kpi-label">Total Capital Needed</div></div>
+<div class="kpi"><div class="kpi-value calc-yellow" id="d_gap"></div><div class="kpi-label">Capital Gap vs Your ₹35L</div></div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title"><span>📊</span> Your Estimate vs Reality</div>
+<table>
+<thead><tr><th>Metric</th><th>Your Model</th><th>Realistic</th><th>Gap %</th></tr></thead>
+<tbody>
+<tr><td class="label">Monthly Fixed Costs</td><td class="calc" id="d_comp_fc_y"></td><td class="calc-red" id="d_comp_fc_r"></td><td class="calc-yellow" id="d_comp_fc_gap"></td></tr>
+<tr><td class="label">Setup Investment</td><td class="calc" id="d_comp_setup_y"></td><td class="calc-red" id="d_comp_setup_r"></td><td class="calc-yellow" id="d_comp_setup_gap"></td></tr>
+<tr><td class="label">Grand Total Capital</td><td class="calc" id="d_comp_cap_y"></td><td class="calc-red" id="d_comp_cap_r"></td><td class="calc-yellow" id="d_comp_cap_gap"></td></tr>
+</tbody>
+</table>
+</div>
+
+<div style="text-align:center;margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+<button class="reset-btn" onclick="resetAll()">🔄 Reset All Values to Default</button>
+<button class="export-btn" onclick="exportToCSV()">📥 Export to Excel CSV</button>
+</div>
+</div>
+
+<button class="print-btn" onclick="window.print()">🖨️ Print</button>
+
+<script>
+const STORAGE_KEY = 'baskly_financial_data';
+let saveTimeout = null;
+
+const fmt = (n) => {
+  if(Math.abs(n)>=100000) return '₹' + (n/100000).toFixed(2) + 'L';
+  return '₹' + n.toLocaleString('en-IN');
+};
+const v = (id) => parseFloat(document.getElementById(id).value)||0;
+const s = (id,val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+const sc = (id,val,cls) => { const el=document.getElementById(id); if(el){el.textContent=val;el.className=cls;} };
+
+// ========== TOAST NOTIFICATION ==========
+function showToast(message, type='success', duration=2500) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = 'toast toast-' + type + ' show';
+  setTimeout(() => { toast.classList.remove('show'); }, duration);
+}
+
+// ========== SAVE INDICATOR ==========
+function updateSaveIndicator(state) {
+  const el = document.getElementById('saveIndicator');
+  if (state === 'saved') {
+    const now = new Date();
+    const time = now.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    el.className = 'save-indicator saved';
+    el.textContent = '✅ Saved at ' + time;
+  } else if (state === 'saving') {
+    el.className = 'save-indicator saving';
+    el.textContent = '💾 Saving...';
+  } else {
+    el.className = 'save-indicator unsaved';
+    el.textContent = '⏳ Not saved yet';
+  }
+}
+
+// ========== LOCALSTORAGE PERSISTENCE ==========
+function saveToLocalStorage() {
+  updateSaveIndicator('saving');
+  const data = {};
+  document.querySelectorAll('input[type="number"]').forEach(inp => {
+    data[inp.id] = inp.value;
+  });
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(STORAGE_KEY + '_timestamp', new Date().toISOString());
+    updateSaveIndicator('saved');
+  } catch(e) {
+    console.warn('localStorage save failed:', e);
+    showToast('⚠️ Could not save — storage may be full', 'warn');
+  }
+}
+
+function loadFromLocalStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    let restored = 0;
+    document.querySelectorAll('input[type="number"]').forEach(inp => {
+      if (data[inp.id] !== undefined) {
+        inp.value = data[inp.id];
+        restored++;
+      }
+    });
+    if (restored > 0) {
+      const ts = localStorage.getItem(STORAGE_KEY + '_timestamp');
+      const timeStr = ts ? new Date(ts).toLocaleString('en-IN') : 'unknown';
+      updateSaveIndicator('saved');
+      showToast('📂 Restored ' + restored + ' saved values (from ' + timeStr + ')', 'info', 3500);
+      return true;
+    }
+  } catch(e) {
+    console.warn('localStorage load failed:', e);
+  }
+  return false;
+}
+
+function clearLocalStorage() {
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(STORAGE_KEY + '_timestamp');
+  updateSaveIndicator('unsaved');
+}
+
+// Debounced auto-save: saves 500ms after the last change
+function scheduleSave() {
+  if (saveTimeout) clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    saveToLocalStorage();
+  }, 500);
+}
+
+// ========== EXPORT TO CSV ==========
+function exportToCSV() {
+  const sections = [];
+  
+  // Section 1: Fixed Monthly Costs
+  const expFields = [
+    ['Rent','ex_rent'],['Staff Salary','ex_staff'],['Electricity','ex_elec'],
+    ['Packaging','ex_pkg'],['Marketing','ex_mkt'],['Delivery & Logistics','ex_del'],
+    ['Technology / Software','ex_tech'],['Insurance','ex_ins'],
+    ['Maintenance & Repairs','ex_maint'],['Wastage / Spoilage','ex_waste'],
+    ['Miscellaneous','ex_misc']
+  ];
+  sections.push(['FIXED MONTHLY COSTS']);
+  sections.push(['Category','Your Estimate','Realistic','Difference']);
+  let totalY=0,totalR=0;
+  expFields.forEach(([label,prefix]) => {
+    const y=v(prefix+'_yours'), r=v(prefix+'_real');
+    totalY+=y; totalR+=r;
+    sections.push([label, y, r, r-y]);
+  });
+  sections.push(['TOTAL', totalY, totalR, totalR-totalY]);
+  sections.push([]);
+  
+  // Section 2: Staff Breakdown
+  sections.push(['STAFF COST BREAKDOWN']);
+  sections.push(['Role','Count','Salary Each','Total']);
+  const staffRoles = [
+    ['Store Manager','s_mgr'],['Sales Associates','s_sa'],
+    ['Cashier','s_cash'],['Helper/Stockkeeper','s_hlp']
+  ];
+  staffRoles.forEach(([label,prefix]) => {
+    const n=v(prefix+'_n'), sal=v(prefix+'_sal');
+    sections.push([label, n, sal, n*sal]);
+  });
+  sections.push([]);
+  
+  // Section 3: Revenue
+  sections.push(['REVENUE INPUTS']);
+  sections.push(['Parameter','Value']);
+  sections.push(['Operating Days/Month', v('rev_days')]);
+  sections.push(['Daily Customers', v('rev_cust')]);
+  sections.push(['Average Bill Size', v('rev_bill')]);
+  sections.push(['Monthly Revenue', v('rev_days')*v('rev_cust')*v('rev_bill')]);
+  sections.push([]);
+  
+  // Section 4: Margins
+  sections.push(['MARGIN ANALYSIS']);
+  sections.push(['Category','% of Sales','Margin %','Contribution %']);
+  const margins = [
+    ['Fresh Produce','m_fresh'],['Branded Organic','m_branded'],['Private Label','m_private']
+  ];
+  margins.forEach(([label,prefix]) => {
+    const pct=v(prefix+'_pct'), m=v(prefix+'_margin');
+    sections.push([label, pct+'%', m+'%', (pct*m/100).toFixed(1)+'%']);
+  });
+  sections.push([]);
+  
+  // Section 5: 24-Month P&L
+  const fc = getRealisticFixed();
+  const days = v('rev_days');
+  sections.push(['24-MONTH P&L PROJECTION']);
+  sections.push(['Period','Daily Customers','Avg Bill','Margin %','Monthly Revenue','Gross Profit','Fixed Costs','Net P&L']);
+  const periods = ['Month 1-3','Month 4-6','Month 7-9','Month 10-12','Month 13-18','Month 19-24'];
+  for(let i=1;i<=6;i++) {
+    const c=v('p'+i+'_cust'),b=v('p'+i+'_bill'),m=v('p'+i+'_margin');
+    const rev=c*b*days, gp=Math.round(rev*m/100), net=gp-fc;
+    sections.push([periods[i-1], c, b, m+'%', rev, gp, fc, net]);
+  }
+  sections.push([]);
+  
+  // Section 6: Capital
+  sections.push(['CAPITAL REQUIREMENT']);
+  sections.push(['Item','Your Estimate','Realistic']);
+  const capItems = [
+    ['Interior + Furniture','cap_int'],['Initial Inventory','cap_inv'],
+    ['Security Deposit','cap_dep'],['POS/Refrigeration/AC/Signage','cap_equip'],
+    ['Licenses/Legal','cap_lic'],['Launch Marketing','cap_launch'],['Misc Setup','cap_misc']
+  ];
+  capItems.forEach(([label,prefix]) => {
+    sections.push([label, v(prefix+'_yours'), v(prefix+'_real')]);
+  });
+  sections.push([]);
+  sections.push(['Working Capital', '', v('cap_loss_months')*v('cap_avg_loss')]);
+  
+  // Build CSV string
+  let csv = '\uFEFF'; // BOM for Excel UTF-8
+  sections.forEach(row => {
+    csv += row.map(cell => {
+      const str = String(cell===undefined?'':cell);
+      return str.includes(',') || str.includes('"') || str.includes('\n')
+        ? '"' + str.replace(/"/g, '""') + '"' : str;
+    }).join(',') + '\n';
+  });
+  
+  // Download
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'BASKLY_Financial_Plan_' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('📥 Exported to CSV — open in Excel!', 'success');
+}
+
+// ========== TAB SWITCHING ==========
+function switchTab(name){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  const tabs=['expenses','revenue','breakeven','monthly','capital','scenarios','dashboard'];
+  const idx=tabs.indexOf(name);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+}
+
+// ========== CALCULATION FUNCTIONS ==========
+function calcStaff(){
+  const mgr=v('s_mgr_n')*v('s_mgr_sal');
+  const sa=v('s_sa_n')*v('s_sa_sal');
+  const cash=v('s_cash_n')*v('s_cash_sal');
+  const hlp=v('s_hlp_n')*v('s_hlp_sal');
+  const subtotal=mgr+sa+cash+hlp;
+  const pf=Math.round(subtotal*v('s_pf_rate')/100);
+  const extras=v('s_extras');
+  const total=subtotal+pf+extras;
+  s('s_mgr_tot',fmt(mgr));s('s_sa_tot',fmt(sa));s('s_cash_tot',fmt(cash));s('s_hlp_tot',fmt(hlp));
+  s('s_pf_amt',fmt(pf));s('s_extras_out',fmt(extras));s('s_total',fmt(total));
+  calc();
+}
+
+function calc(){
+  const fields=['rent','staff','elec','pkg','mkt','del','tech','ins','maint','waste','misc'];
+  let totalY=0,totalR=0;
+  fields.forEach(f=>{
+    const y=v('ex_'+f+'_yours'),r=v('ex_'+f+'_real'),d=r-y;
+    totalY+=y;totalR+=r;
+    const cls=d>0?'calc-red':d<0?'calc-green':'calc';
+    sc('ex_'+f+'_diff',(d>=0?'+':'')+fmt(d),cls);
+  });
+  s('ex_total_yours',fmt(totalY));s('ex_total_real',fmt(totalR));
+  const totalDiff=totalR-totalY;
+  sc('ex_total_diff',(totalDiff>=0?'+':'')+fmt(totalDiff)+' ('+(totalY>0?Math.round(totalDiff/totalY*100):0)+'%)',totalDiff>0?'calc-red':'calc-green');
+
+  const days=v('rev_days'),cust=v('rev_cust'),bill=v('rev_bill');
+  const monthlyCust=days*cust;
+  const monthlyRev=monthlyCust*bill;
+  s('rev_monthly_cust',monthlyCust.toLocaleString('en-IN'));
+  s('rev_monthly_rev',fmt(monthlyRev));
+  s('rev_annual_rev',fmt(monthlyRev*12));
+
+  const fp=v('m_fresh_pct'),fm=v('m_fresh_margin');
+  const bp=v('m_branded_pct'),bm=v('m_branded_margin');
+  const pp=v('m_private_pct'),pm=v('m_private_margin');
+  const fc=fp*fm/100,bc=bp*bm/100,pc=pp*pm/100;
+  const blended=fc+bc+pc;
+  s('m_fresh_cont',fc.toFixed(1)+'%');s('m_branded_cont',bc.toFixed(1)+'%');s('m_private_cont',pc.toFixed(1)+'%');
+  s('m_total_pct',(fp+bp+pp)+'%');s('m_blended',blended.toFixed(1)+'%');
+  s('m_blended_amt',fmt(Math.round(monthlyRev*blended/100)));
+
+  s('be_fixed',fmt(totalR));s('be_margin',blended.toFixed(1)+'%');
+  const beRev=blended>0?totalR/(blended/100):0;
+  s('be_revenue',fmt(Math.round(beRev)));
+  s('be_daily_rev',fmt(Math.round(beRev/days)));
+
+  const bills=[500,600,800,1000,1200,1500,2000,2500,3000];
+  let beHtml='';
+  bills.forEach(b=>{
+    const custDay=beRev/(b*days);
+    const custMo=custDay*days;
+    beHtml+=`<tr><td>₹${b.toLocaleString('en-IN')}</td><td class="calc">${Math.ceil(custDay)}</td><td class="calc">${Math.ceil(custMo)}</td></tr>`;
+  });
+  document.getElementById('be_table_body').innerHTML=beHtml;
+
+  s('d_fixed',fmt(totalR));s('d_margin',blended.toFixed(1)+'%');s('d_breakeven',fmt(Math.round(beRev)));
+  const beCust=bill>0?Math.ceil(beRev/(bill*days)):0;
+  s('d_be_cust',beCust);
+
+  calcPL();calcCap();calcScenarios();
+
+  s('d_comp_fc_y',fmt(totalY));s('d_comp_fc_r',fmt(totalR));
+  s('d_comp_fc_gap',totalY>0?Math.round((totalR-totalY)/totalY*100)+'%':'N/A');
+
+  // Auto-save after every calc
+  scheduleSave();
+}
+
+function calcPL(){
+  const fc=getRealisticFixed();
+  const days=v('rev_days');
+  let cumulative=0;
+  for(let i=1;i<=6;i++){
+    const c=v('p'+i+'_cust'),b=v('p'+i+'_bill'),m=v('p'+i+'_margin');
+    const rev=c*b*days;
+    const gp=Math.round(rev*m/100);
+    const net=gp-fc;
+    const months=i<=4?3:6;
+    cumulative+=net*months;
+    s('p'+i+'_rev',fmt(rev));s('p'+i+'_gp',fmt(gp));s('p'+i+'_fc',fmt(fc));
+    sc('p'+i+'_net',fmt(net),net>=0?'calc-green':'calc-red');
+    sc('p'+i+'_cum',fmt(cumulative),cumulative>=0?'calc-green':'calc-red');
+  }
+}
+
+function getRealisticFixed(){
+  const fields=['rent','staff','elec','pkg','mkt','del','tech','ins','maint','waste','misc'];
+  let total=0;
+  fields.forEach(f=>total+=v('ex_'+f+'_real'));
+  return total;
+}
+
+function calcCap(){
+  const capFields=[['int','Interior'],['inv','Inventory'],['dep','Deposit'],['equip','Equipment'],['lic','Licenses'],['launch','Launch Mkt'],['misc','Misc']];
+  let setupY=0,setupR=0;
+  capFields.forEach(([f])=>{setupY+=v('cap_'+f+'_yours');setupR+=v('cap_'+f+'_real');});
+  s('cap_setup_yours',fmt(setupY));s('cap_setup_real',fmt(setupR));
+
+  const working=v('cap_loss_months')*v('cap_avg_loss');
+  const bufferPct=v('cap_buffer_pct');
+  const buffer=Math.round((setupR+working)*bufferPct/100);
+  const grandTotal=setupR+working+buffer;
+  s('cap_working',fmt(working));s('cap_buffer',fmt(buffer));s('cap_grand_total',fmt(grandTotal));
+
+  const yoursTotal=setupY;
+  s('cap_yours_total',fmt(yoursTotal));s('cap_real_total',fmt(grandTotal));
+  s('cap_gap',fmt(grandTotal-yoursTotal));
+
+  s('d_capital',fmt(grandTotal));
+  s('d_gap',fmt(grandTotal-3500000));
+
+  s('d_comp_setup_y',fmt(setupY));s('d_comp_setup_r',fmt(setupR));
+  s('d_comp_setup_gap',setupY>0?Math.round((setupR-setupY)/setupY*100)+'%':'N/A');
+  s('d_comp_cap_y',fmt(yoursTotal));s('d_comp_cap_r',fmt(grandTotal));
+  s('d_comp_cap_gap',yoursTotal>0?Math.round((grandTotal-yoursTotal)/yoursTotal*100)+'%':'N/A');
+}
+
+function calcScenarios(){
+  const fc=getRealisticFixed();
+  const days=v('rev_days');
+  ['best','base','worst'].forEach(sc_name=>{
+    const c=v('sc_'+sc_name+'_cust'),b=v('sc_'+sc_name+'_bill'),m=v('sc_'+sc_name+'_margin');
+    const rev=c*b*days;
+    const profit=Math.round(rev*m/100)-fc;
+    s('sc_'+sc_name+'_rev',fmt(rev));
+    const cls=profit>=0?'calc-green':'calc-red';
+    const el=document.getElementById('sc_'+sc_name+'_profit');
+    if(el){el.textContent=fmt(profit);el.className=cls;}
+  });
+}
+
+// ========== DEFAULTS & RESET ==========
+const defaults={};
+function storeDefaults(){
+  document.querySelectorAll('input[type="number"]').forEach(inp=>{
+    defaults[inp.id]=inp.value;
+  });
+}
+
+function resetAll(){
+  if(!confirm('⚠️ Reset all values to defaults?\n\nThis will erase all your saved changes.')) return;
+  document.querySelectorAll('input[type="number"]').forEach(inp=>{
+    if(defaults[inp.id]) inp.value=defaults[inp.id];
+  });
+  clearLocalStorage();
+  calcStaff();
+  calc();
+  showToast('🔄 All values reset to defaults', 'warn');
+}
+
+// ========== INIT ==========
+storeDefaults();
+const hadSaved = loadFromLocalStorage();
+calcStaff();
+calc();
+if(!hadSaved) updateSaveIndicator('unsaved');
+</script>
+</body>
+</html>
