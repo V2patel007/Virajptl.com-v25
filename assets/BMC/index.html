@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BASKLY | Business Model Canvas</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-sub" style="font-weight: bold; text-align: center;">Business Model Canvas</div>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="#financials" class="nav-link" data-section="financials"><i class="fas fa-calculator"></i><span>Financials</span></a></li>
+        <li class="nav-group-label">CANVAS</li>
+        <li><a href="#customers" class="nav-link" data-section="customers"><i class="fas fa-users"></i><span>1. Customer Segments</span></a></li>
+        <li><a href="#value" class="nav-link" data-section="value"><i class="fas fa-star"></i><span>2. Value Propositions</span></a></li>
+        <li><a href="#channels" class="nav-link" data-section="channels"><i class="fas fa-broadcast-tower"></i><span>3. Channels</span></a></li>
+        <li><a href="#relationships" class="nav-link" data-section="relationships"><i class="fas fa-heart"></i><span>4. Customer Relations</span></a></li>
+        <li><a href="#revenue" class="nav-link" data-section="revenue"><i class="fas fa-rupee-sign"></i><span>5. Revenue Streams</span></a></li>
+        <li><a href="#resources" class="nav-link" data-section="resources"><i class="fas fa-boxes"></i><span>6. Key Resources</span></a></li>
+        <li><a href="#activities" class="nav-link" data-section="activities"><i class="fas fa-tasks"></i><span>7. Key Activities</span></a></li>
+        <li><a href="#partnerships" class="nav-link" data-section="partnerships"><i class="fas fa-handshake"></i><span>8. Key Partnerships</span></a></li>
+        <li><a href="#costs" class="nav-link" data-section="costs"><i class="fas fa-coins"></i><span>9. Cost Structure</span></a></li>
+        <li><a href="#kpis" class="nav-link" data-section="kpis"><i class="fas fa-bullseye"></i><span>10. KPIs & Validation</span></a></li>
+        <li class="nav-group-label">ACTIONS</li>
+        <li><a href="#" class="nav-link" id="exportBtn"><i class="fas fa-download"></i><span>Export Report</span></a></li>
+        <li><a href="#" class="nav-link" id="saveBtn"><i class="fas fa-save"></i><span>Save Progress</span></a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="completion-bar">
+          <div class="completion-label">
+            <span>Canvas Completion</span>
+            <span id="completionPct">0%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+          <div class="breadcrumb" id="breadcrumb">Financials</div>
+        </div>
+        <div class="topbar-right">
+          <div class="status-badge" id="statusBadge"><i class="fas fa-circle"></i> Planning Phase</div>
+          <div class="date-badge">📅 March 2026</div>
+        </div>
+      </header>
+
+      <!-- Sections will be loaded here -->
+      <div class="sections-container" id="sectionsContainer"></div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="data.js"></script>
+  <script src="financials.js"></script>
+  <script src="sections_1.js"></script>
+  <script src="sections_2.js"></script>
+  <script src="sections_3.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
