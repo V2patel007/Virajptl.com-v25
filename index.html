@@ -3044,9 +3044,20 @@ focused products that solve real-world problems through intelligent tech integra
     body: JSON.stringify({ websiteId: 'cmtsa4vzh0001i904kp23itjb' })
   })
   .then(res => res.json())
-  .then(data => console.log('Widget context loaded:', data))
+  .then(data => {
+    if (data.error) {
+      console.error('Validation details:', JSON.stringify(data.error.details, null, 2));
+    } else {
+      console.log('Success:', data);
+    }
+  })
   .catch(err => console.error('Fetch error:', err));
 </script>
+<script> body: JSON.stringify({
+  websiteId: 'cmtsa4vzh0001i904kp23itjb',
+  url: window.location.href,
+  referrer: document.referrer || null
+})</script>
 </body>
 
 </html>
